@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   tfl_dir = 'tensorflow/lite/'
   swift_dir = tfl_dir + 'experimental/swift/'
   s.source_files = swift_dir + 'Sources/*.swift'
-  s.dependency 'TensorFlowLiteC', "#{s.version}"
+  s.dependency 'TensorFlowLiteC', "1.0.0"
 
   s.test_spec 'Tests' do |ts|
     ts.source_files = swift_dir + 'Tests/*.swift'
