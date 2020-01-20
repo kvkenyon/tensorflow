@@ -326,6 +326,8 @@ TfLiteStatus Prepare(KernelType kernel_type, TfLiteContext* context,
 
   TF_LITE_ENSURE(context, has_bias);
 
+  bool use_cache = params->use_cache;
+
   // Note that full fixed-point inference requires that all tensors have their
   // parameters set. This is usually done during quantized training or
   // calibration.

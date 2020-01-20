@@ -198,6 +198,8 @@ TfLiteStatus ParseOpData(const Operator* op, BuiltinOperator op_type,
 
         params->dilation_width_factor = conv_params->dilation_w_factor();
         params->dilation_height_factor = conv_params->dilation_h_factor();
+
+        params->use_cache = conv_params->use_cache();
       }
       *builtin_data = reinterpret_cast<void*>(params.release());
       break;

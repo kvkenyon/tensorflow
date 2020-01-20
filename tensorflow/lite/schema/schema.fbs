@@ -436,12 +436,16 @@ enum ActivationFunctionType : byte {
 }
 
 table Conv2DOptions {
+  // Version 1
   padding:Padding;
   stride_w:int;
   stride_h:int;
   fused_activation_function:ActivationFunctionType;
   dilation_w_factor:int = 1;
   dilation_h_factor:int = 1;
+
+  // Version 2
+  use_cache:bool = false;
 }
 
 table Pool2DOptions {
