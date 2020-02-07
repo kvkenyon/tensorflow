@@ -134,6 +134,7 @@ void PrintProfilingInfo(const profiling::ProfileEvent* e,
 }
 
 void RunInference(Settings* s) {
+  LOG(INFO) << "Kevin is here to stay. Bud.";
   if (!s->model_name.c_str()) {
     LOG(ERROR) << "no model file name\n";
     exit(-1);

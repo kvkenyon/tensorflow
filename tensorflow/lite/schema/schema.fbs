@@ -443,8 +443,6 @@ table Conv2DOptions {
   fused_activation_function:ActivationFunctionType;
   dilation_w_factor:int = 1;
   dilation_h_factor:int = 1;
-
-  // Version 2
   use_cache:bool = false;
 }
 

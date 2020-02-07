@@ -404,7 +404,7 @@ Java_org_tensorflow_lite_NativeInterpreterWrapper_createInterpreter(
     return 0;
   }
   // Note that tensor allocation is performed explicitly by the owning Java
-  // NativeInterpreterWrapper instance.
+  // NativeInterpreterWrapper instance.`
   return reinterpret_cast<jlong>(interpreter.release());
 }
 

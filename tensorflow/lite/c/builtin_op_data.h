@@ -85,6 +85,9 @@ typedef struct {
   // Note: Version 2 supports dilation values not equal to 1.
   int dilation_width_factor;
   int dilation_height_factor;
+
+  // Parameters for CONV_2D version 3 (deep cache).
+  bool use_cache;
 } TfLiteConvParams;
 
 typedef struct {
