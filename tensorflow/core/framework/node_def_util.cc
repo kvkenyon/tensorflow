@@ -249,10 +249,8 @@ bool AttrSlice::EqualAttrs(AttrSlice other, Scratch* scratch) const {
     }                                                                     \
     return true;                                                          \
   }
-#ifdef USE_TSTRING
 DEFINE_GET_ATTR(tstring, s, "string", emplace_back, v, ;)
 DEFINE_TRY_GET_ATTR(tstring, s, "string", emplace_back, v, ;)
-#endif
 DEFINE_GET_ATTR(string, s, "string", emplace_back, v, ;)
 DEFINE_TRY_GET_ATTR(string, s, "string", emplace_back, v, ;)
 DEFINE_GET_ATTR(int64, i, "int", emplace_back, v, ;)
@@ -716,7 +714,7 @@ bool IsValidNodeName(StringPiece sp) {
     if (scanner.empty())  // No error, but nothing left, good.
       return true;
 
-    // Absorb another piece, starting with a '>'
+    // Absorb another name/namespace, starting with a '>'
     scanner.One(Scanner::RANGLE)
         .One(Scanner::LETTER_DIGIT_DOT)
         .Any(Scanner::LETTER_DIGIT_DASH_DOT_SLASH_UNDERSCORE);
@@ -728,26 +726,46 @@ bool IsValidDataInputName(StringPiece sp) {
   Scanner scan(sp);
   scan.One(Scanner::LETTER_DIGIT_DOT)
       .Any(Scanner::LETTER_DIGIT_DASH_DOT_SLASH_UNDERSCORE);
-  if (scan.Peek() == ':') {
-    scan.OneLiteral(":");
-    if (scan.Peek() == '0') {
-      scan.OneLiteral("0");  // :0
+
+  while (true) {
+    if (!scan.GetResult())  // Some error in previous iteration.
+      return false;
+    if (scan.empty())  // No error, but nothing left, good.
+      return true;
+
+    if (scan.Peek() == ':') {  // Absorb identifier after the colon
+      scan.OneLiteral(":");
+      if (scan.Peek() == '0') {
+        scan.OneLiteral("0");  // :0
+      } else {
+        scan.Many(Scanner::DIGIT);  // :[1-9][0-9]*
+      }
     } else {
-      scan.Many(Scanner::DIGIT);  // :[1-9][0-9]*
+      // Absorb another name/namespace, starting with a '>'
+      scan.One(Scanner::RANGLE)
+          .One(Scanner::LETTER_DIGIT_DOT)
+          .Any(Scanner::LETTER_DIGIT_DASH_DOT_SLASH_UNDERSCORE);
     }
   }
-  scan.Eos();
-
-  return scan.GetResult();
 }
 
 bool IsValidControlInputName(StringPiece sp) {
-  return Scanner(sp)
-      .OneLiteral("^")
+  Scanner scan(sp);
+  scan.OneLiteral("^")
       .One(Scanner::LETTER_DIGIT_DOT)
-      .Any(Scanner::LETTER_DIGIT_DASH_DOT_SLASH_UNDERSCORE)
-      .Eos()
-      .GetResult();
+      .Any(Scanner::LETTER_DIGIT_DASH_DOT_SLASH_UNDERSCORE);
+
+  while (true) {
+    if (!scan.GetResult())  // Some error in previous iteration.
+      return false;
+    if (scan.empty())  // No error, but nothing left, good.
+      return true;
+
+    // Absorb another name/namespace, starting with a '>'
+    scan.One(Scanner::RANGLE)
+        .One(Scanner::LETTER_DIGIT_DOT)
+        .Any(Scanner::LETTER_DIGIT_DASH_DOT_SLASH_UNDERSCORE);
+  }
 }
 
 }  // namespace
