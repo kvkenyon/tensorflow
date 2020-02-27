@@ -827,6 +827,8 @@ struct ConvParams {
   // float activation params.
   float float_activation_min;
   float float_activation_max;
+
+  bool use_mask;
 };
 
 struct DepthToSpaceParams {

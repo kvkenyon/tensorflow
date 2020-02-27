@@ -39,6 +39,10 @@ inline void Conv(const ConvParams& params, const RuntimeShape& input_shape,
   const int pad_height = params.padding_values.height;
   const float output_activation_min = params.float_activation_min;
   const float output_activation_max = params.float_activation_max;
+
+  // TODO (kwkenyon): Add masking code
+  const bool use_mask = params.use_mask;
+
   TFLITE_DCHECK_EQ(input_shape.DimensionsCount(), 4);
   TFLITE_DCHECK_EQ(filter_shape.DimensionsCount(), 4);
   TFLITE_DCHECK_EQ(output_shape.DimensionsCount(), 4);

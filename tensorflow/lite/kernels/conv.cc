@@ -106,6 +106,8 @@ struct OpData {
   bool supports_multithreaded_kernel = false;
   bool is_hybrid_per_channel = false;
   bool compute_hybrid_row_sums = true;
+
+  // TODO (kwkenyon): add logic here to create mask in opdata
 };
 
 inline PaddingType RuntimePaddingType(TfLitePadding padding) {
@@ -393,7 +395,6 @@ TfLiteStatus Prepare(KernelType kernel_type, TfLiteContext* context,
 
   TF_LITE_ENSURE(context, has_bias);
 
-  bool use_cache = params->use_cache;
 
   // Note that full fixed-point inference requires that all tensors have their
   // parameters set. This is usually done during quantized training or
@@ -701,7 +702,10 @@ void EvalFloat(TfLiteContext* context, TfLiteNode* node,
   op_params.dilation_height_factor = params->dilation_height_factor;
   op_params.float_activation_min = output_activation_min;
   op_params.float_activation_max = output_activation_max;
+  op_params.use_mask = params->use_mask;
+
   switch (effective_kernel_type) {
+    //TODO:(kwkenyon)
     case kReference: {
       reference_ops::Conv(op_params, GetTensorShape(input),
                           GetTensorData<float>(input), GetTensorShape(filter),
@@ -713,6 +717,7 @@ void EvalFloat(TfLiteContext* context, TfLiteNode* node,
     }
     case kCblasOptimized:
     case kGenericOptimized: {
+    //TODO: (kwkenyon)
       optimized_ops::Conv(op_params, GetTensorShape(input),
                           GetTensorData<float>(input), GetTensorShape(filter),
                           GetTensorData<float>(filter), GetTensorShape(bias),
@@ -735,6 +740,7 @@ void EvalFloat(TfLiteContext* context, TfLiteNode* node,
       } else {
         filter_data = GetTensorData<float>(filter);
       }
+      // TODO: (kwkenyon)
       multithreaded_ops::Conv(
           *eigen_support::GetThreadPoolDevice(context), op_params,
           GetTensorShape(input), GetTensorData<float>(input),
