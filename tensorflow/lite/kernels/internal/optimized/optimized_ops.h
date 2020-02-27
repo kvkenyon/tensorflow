@@ -6,8 +6,7 @@ You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
@@ -1156,6 +1155,10 @@ inline void Conv(const ConvParams& params, const RuntimeShape& input_shape,
   const int dilation_height_factor = params.dilation_height_factor;
   const float output_activation_min = params.float_activation_min;
   const float output_activation_max = params.float_activation_max;
+
+  // TODO: (kwkenyon) Add masking logic
+  const bool use_mask = params.use_mask;
+
   TFLITE_DCHECK_EQ(input_shape.DimensionsCount(), 4);
   TFLITE_DCHECK_EQ(filter_shape.DimensionsCount(), 4);
   TFLITE_DCHECK_EQ(output_shape.DimensionsCount(), 4);
